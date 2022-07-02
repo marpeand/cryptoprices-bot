@@ -43,7 +43,7 @@ def tweet(api, message):
         print('Can`t tweet message!')
 
 def main():
-    symbols = ['BTC', 'ETH', 'SOL', 'DOGE']
+    symbols = ['BTC', 'ETH', 'SOL', 'BNB', 'ADA', 'XMR', 'LTC','DOGE']
     api = createAPI()
     interval = '1h'
 
