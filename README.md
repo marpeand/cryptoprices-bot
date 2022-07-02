@@ -1,4 +1,4 @@
-# CryptoPrice Twitter Bot 
+# CryptoPrice Twitter Bot :robot:
 
 Get the most recognized cryptocurrencies prices in twitter following this crypto bot that tweets every 1 hour the crypto prices and other important data.
 
