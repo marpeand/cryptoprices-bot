@@ -5,6 +5,7 @@ from time import sleep
 
 
 def createAPI():
+
     keys = {
         'CONSUMER_KEY':         environ['CONSUMER_KEY'],
         'CONSUMER_SECRET':      environ['CONSUMER_SECRET'],
@@ -25,24 +26,13 @@ def getPrice(symbol):
     return requests.get(f"https://api.binance.com/api/v3/ticker/price?symbol={symbol}USDT").json()
 
 
-def getStatus(symbol, price, change, percent, interval):
-    status_list = {
-        'BTC':[ 
-            f'#Bitcoin = {price}USD ({change}USD change) \nChange % ({interval}) = {percent}%\n\n #BTC #BTCUSD #Crypto'
-        ],
-        'ETH':[
-            f'#Ethereum = {price}USD ({change}USD change) \nChange % ({interval}) = {percent}%\n\n #ETH #ETHUSD #Crypto'
-        ],
-        'SOL':[
-            f'#Solana = {price}USD ({change}USD change) \nChange % ({interval}) = {percent}%\n\n #SOL #SOLUSD #Crypto'
-        ],
-        'DOGE':[
-            f'#DOGE = {price}USD ({change}USD change) \nChange % ({interval}) = {percent}%\n\n #DOGE #DOGEUSD #Crypto'
-        ]
-    }
+def getStatus(symbol, price, change, percent, interval, emoji):
 
-    return status_list[symbol][0]
+    status = f"#{symbol} Stats 📊📈📉 (last {interval})\n\n Price : {price} USD💵\n \
+Variation : {percent}% ({change}USD) {emoji}\n\n\
+#CryptoNews #CryptoMarket #Crypto"
 
+    return status
 
 
 def tweet(api, message):
@@ -65,9 +55,11 @@ def main():
         price_change = float(changeResponse['priceChange'])
         change_percent = float(changeResponse['priceChangePercent'])
 
-        tweet(api, getStatus(symbol, price, price_change, change_percent, interval))
+        emoji = "🔴⬇️" if change_percent < 0 else "🟢⬆️"
 
-        sleep(5)
+        tweet(api, getStatus(symbol, price, price_change, change_percent, interval, emoji))
+
+        sleep(1)
 
 if __name__ == '__main__':
     main()
