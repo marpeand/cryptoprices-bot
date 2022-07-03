@@ -7,6 +7,10 @@ Currently tweeting
 - Ethereum
 - DogeCoin
 - Solana
+- Cardano
+- Monero
+- Litecoin
+- Binance Coin
 
 ## Links
 - Bot Account -> [@cryptobotprices](https://twitter.com/cryptobotprices)
