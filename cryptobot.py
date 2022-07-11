@@ -28,8 +28,8 @@ def getPrice(symbol):
 
 def getStatus(symbol, price, change, percent, interval, emoji):
 
-    status = f"#{symbol} Stats 📊📈📉 (last {interval})\n\n Price : {price} USD💵\n \
-Variation : {percent}% ({change}USD) {emoji}\n\n\
+    status = f"#{symbol} Stats 📊📈📉 (last {interval})\n\n Price : {price} USDT💵\n \
+Variation : {percent}% ({change}USDT) {emoji}\n\n\
 #CryptoNews #CryptoMarket #Crypto"
 
     return status
