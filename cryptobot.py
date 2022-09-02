@@ -30,7 +30,7 @@ def getStatus(symbol, price, change, percent, interval, emoji):
 
     status = f"#{symbol} Stats 📊📈📉 (last {interval})\n\n Price : {price} #USDT💵\n \
 Variation : {percent}% ({change}USDT💵) {emoji}\n\n\
-#cryptonews #cryptomarket #crypto"
+#cryptonews #cryptomarket #crypto #blockchain #trading"
 
     return status
 
@@ -57,7 +57,9 @@ def main():
 
         emoji = "🔴⬇️" if change_percent < 0 else "🟢⬆️"
 
-        tweet(api, getStatus(symbol, price, price_change, change_percent, interval, emoji))
+        status = getStatus(symbol, price, price_change, change_percent, interval, emoji)
+
+        tweet(api, status)
 
         sleep(1)
 
