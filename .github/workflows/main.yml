@@ -1,1 +1,31 @@
+name: Crypto Twitter Bot
 
+on:
+  schedule:
+    - cron: '0 * * * *' # Every hour
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: checkout repo content
+        uses: actions/checkout@v2
+
+      - name: setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.8'
+          
+      - name: install python packages
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          
+      - name: execute cryptobot
+        env:
+          ACCESS_TOKEN: ${{secrets.ACCESS_TOKEN}}
+          ACCESS_TOKEN_SECRET: ${{secrets.ACCESS_TOKEN_SECRET}}
+          CONSUMER_KEY: ${{secrets.CONSUMER_KEY}}
+          CONSUMER_SECRET: ${{secrets.CONSUMER_SECRET}}
+        run: python cryptobot.py
