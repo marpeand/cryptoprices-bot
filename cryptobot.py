@@ -4,7 +4,7 @@ from os import environ
 from time import sleep
 
 
-def createAPI():
+def create_API():
 
     keys = {
         'CONSUMER_KEY':         environ['CONSUMER_KEY'],
@@ -19,47 +19,53 @@ def createAPI():
 
     return api
 
-def getpriceChange(symbol, interval):
-    return requests.get(f"https://api.binance.com/api/v3/ticker?symbol={symbol}USDT&windowSize={interval}").json()
+def get_price_last_hour(coin, interval):
+    response = requests.get(f"https://api.coingecko.com/api/v3/coins/{coin}/market_chart?vs_currency=usd&days=0&interval={interval}").json()
+    price_last_hour = response['prices'][0][1]
+    return price_last_hour
 
-def getPrice(symbol):
-    return requests.get(f"https://api.binance.com/api/v3/ticker/price?symbol={symbol}USDT").json()
+def get_price(coin):
+    response = requests.get(f"https://api.coingecko.com/api/v3/simple/price?ids={coin}&vs_currencies=usd")
+    return response.json()[f"{coin}"]['usd']
 
-
-def getStatus(symbol, price, change, percent, interval, emoji):
-
-    status = f"#{symbol} Stats 📊📈📉 (last {interval})\n\n Price : {price} #USDT💵\n \
-Variation : {percent}% ({change}USDT💵) {emoji}\n\n\
+def generate_status(coin, price, change, percent, interval, emoji):
+    status = f"#{coin} Stats 📊📈📉 (last hour)\n\n Price : {price} USD💵\n \
+Variation : {percent}% ({change}USD💵) {emoji}\n\n\
 #cryptonews #cryptomarket #crypto #blockchain #trading"
 
     return status
 
-
-def tweet(api, message):
+def tweet_status(api, message):
     try:
         api.update_status(message)
         print(f'status updated')
     except tweepy.errors.Forbidden:
-        print('Can`t tweet message!')
+        print('Can`t tweet status!')
 
 def main():
-    symbols = ['BTC', 'ETH', 'SOL', 'BNB', 'ADA', 'XMR', 'LTC','DOGE']
-    api = createAPI()
-    interval = '1h'
+    coins = [
+        'bitcoin', 'ethereum', 'solana', 
+        'binancecoin', 'cardano', 'monero', 
+        'litecoin','dogecoin'
+    ]
+    
+    API = create_API()
+    interval = 'hourly'
 
-    for symbol in symbols:
-        changeResponse = getpriceChange(symbol, interval)
-        priceResponse = getPrice(symbol)
+    for coin in coins:
+        price = float(get_price(coin))
+        sleep(6) # sleep necessary to prevent 429 Too Many Requests error.
+        price_1h = float(get_price_last_hour(coin, interval))
 
-        price = float(priceResponse['price'])
-        price_change = float(changeResponse['priceChange'])
-        change_percent = float(changeResponse['priceChangePercent'])
+        price_change = round(price - price_1h, 2)
+        change_percent = round(((price/price_1h) * 100) - 100, 2)
 
         emoji = "🔴⬇️" if change_percent < 0 else "🟢⬆️"
 
-        status = getStatus(symbol, price, price_change, change_percent, interval, emoji)
+        status = generate_status(coin, price, price_change, change_percent, interval, emoji)
 
-        tweet(api, status)
+        print(status)
+        tweet_status(API, status)
 
         sleep(1)
 
