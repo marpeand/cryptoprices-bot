@@ -64,7 +64,6 @@ def main():
 
         status = generate_status(coin, price, price_change, change_percent, interval, emoji)
 
-        print(status)
         tweet_status(API, status)
 
         sleep(1)
