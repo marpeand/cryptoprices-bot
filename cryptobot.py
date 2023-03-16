@@ -35,7 +35,7 @@ def generate_status(coin, price, price_1h, interval):
     emoji = "🔴⬇️" if change_percent < 0 else "🟢⬆️"
 
     status = f"#{coin} Stats 📊📈📉 (last hour)\n\n Price : {price} USD💵\n \
-Variation : {percent}% ({change}USD💵) {emoji}\n\n\
+Variation : {change_percent}% ({price_change}USD💵) {emoji}\n\n\
 #cryptonews #cryptomarket #crypto #blockchain #trading"
 
     return status
