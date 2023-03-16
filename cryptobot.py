@@ -28,7 +28,12 @@ def get_price(coin):
     response = requests.get(f"https://api.coingecko.com/api/v3/simple/price?ids={coin}&vs_currencies=usd")
     return response.json()[f"{coin}"]['usd']
 
-def generate_status(coin, price, change, percent, interval, emoji):
+def generate_status(coin, price, price_1h, interval):
+    price_change = round(price - price_1h, 2)
+    change_percent = round(((price/price_1h) * 100) - 100, 2)
+
+    emoji = "🔴⬇️" if change_percent < 0 else "🟢⬆️"
+
     status = f"#{coin} Stats 📊📈📉 (last hour)\n\n Price : {price} USD💵\n \
 Variation : {percent}% ({change}USD💵) {emoji}\n\n\
 #cryptonews #cryptomarket #crypto #blockchain #trading"
@@ -57,14 +62,8 @@ def main():
         sleep(6) # sleep necessary to prevent 429 Too Many Requests error.
         price_1h = float(get_price_last_hour(coin, interval))
 
-        price_change = round(price - price_1h, 2)
-        change_percent = round(((price/price_1h) * 100) - 100, 2)
+        status = generate_status(coin, price, price_1h, interval)
 
-        emoji = "🔴⬇️" if change_percent < 0 else "🟢⬆️"
-
-        status = generate_status(coin, price, price_change, change_percent, interval, emoji)
-
-        print(status)
         tweet_status(API, status)
 
         sleep(1)
